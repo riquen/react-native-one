@@ -1,21 +1,26 @@
+import { useState } from "react"
 import { Alert, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { styles } from "./styles"
 import { Participant } from "../../components/Participant"
-
-const participants = ['Loki', 'Bento', 'Pluto', 'Melissa', 'Nina', 'Tufão', 'Zig', 'Remendado', 'Mussum', 'Andy']
+import { styles } from "./styles"
 
 export function Home() {
-    function handleParticipantAdd(user :string) {
-        if (participants.includes(user)) {
+    const [participants, setParticipants] = useState<string[]>([])
+    const [participantName, setParticipantName] = useState<string>('')
+
+    function handleParticipantAdd() {
+        if (participants.includes(participantName)) {
             return Alert.alert('Participante já existe', 'Já existe um participante com esse nome na lista.')
         }
+
+        setParticipants(prevState => [ ...prevState, participantName ])
+        setParticipantName('')
     }
 
-    function handleParticipantRemove(user: string) {
-        Alert.alert('Remover', `Remover o participante ${user}?`, [
+    function handleParticipantRemove(participantName: string) {
+        Alert.alert('Remover', `Remover o participante ${participantName}?`, [
             {
                 text: 'Sim',
-                onPress: () => Alert.alert('Deletado!')
+                onPress: () => setParticipants(prevState => prevState.filter(item => item !== participantName))
             },
             {
                 text: 'Não'
@@ -36,8 +41,10 @@ export function Home() {
                     style={styles.input}
                     placeholder="Nome do participante"
                     placeholderTextColor='#6b6b6b'
+                    onChangeText={setParticipantName}
+                    value={participantName}
                 />
-                <TouchableOpacity style={styles.button} onPress={() => handleParticipantAdd('Pluto')}>
+                <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
                     <Text style={styles.buttonText}>
                         +
                     </Text>
@@ -49,7 +56,7 @@ export function Home() {
                 renderItem={({ item }) => (
                     <Participant
                         key={item}
-                        user={item}
+                        participantName={item}
                         onRemove={() => handleParticipantRemove(item)}
                     />
                 )}

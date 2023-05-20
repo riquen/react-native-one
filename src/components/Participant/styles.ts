@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 10
     },
-    name: {
+    participantName: {
         flex: 1,
         fontSize: 16,
         color: '#fff',
